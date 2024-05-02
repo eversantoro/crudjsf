@@ -1,0 +1,156 @@
+.login-body .login-panel .logo-container img {
+    width: 250px;
+    display: inline-block;
+}
+
+.login-body .login-panel {
+	width: 450px;
+}
+
+.login-body .login-panel .logo-container {
+    width: 100%;
+    text-align: center;
+}
+
+.login-body {
+	background: url("#{sistemaMB.backgroundLogin}") 0% 0% / cover no-repeat;
+}
+
+.login-body .login-panel .forgetpassword-container {
+    text-align: center;
+}
+
+.div-idioma {
+	text-align: right; 
+	cursor: pointer;
+}
+
+.div-idioma .active {
+	background-color: #e0e0e0;
+}
+
+.div-idioma .active a {
+	font-weight: bold;
+	color: #444 !important;
+}
+
+.text-forgot h3 {
+	font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.esqueceu-senha,
+.text-forgot p {
+	text-align: center !important;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+  right: 70px;
+}
+
+.dropdown-content ul {
+	text-align: left;
+}
+
+.dropdown-content ul {
+	padding: 0px;
+    list-style-type: none;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-content ul li a:hover {
+	background-color: #ececec;
+}
+
+.dropdown-content ul li a{
+	color: #666666 !important;
+	text-decoration: none !important;
+	padding: 12px 16px 12px 16px;
+	width: 100%;
+	display: inline-block;
+	margin: 0px;
+}
+
+.dropdown-content ul li {
+	display: inline-flex;
+}
+
+.dropdown span {
+	font-size: 1em;
+	align-self: center;
+}
+
+.dropdown i {
+	font-size: 1.5em;
+	align-self: center;
+}
+
+.dropdown {
+	display: inline-flex;
+	padding: 30px 6px 6px 6px
+}
+
+.show {display: block;}
+
+.ajax-loader .ui-dialog-titlebar {
+	display: none;
+}
+
+.ajax-loader {
+	-webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.16) !important;
+    -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.16) !important;
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.16) !important;
+}
+
+.ajax-loader .ui-dialog-content {
+	padding: 8px;
+	background: none !important;
+}
+
+.ajax-loader .ui-dialog-content i {
+	color: #b70000;
+    font-size: 48px;
+}
+
+@media screen and (max-width: 40em) {
+	.login-body .login-panel {
+		width: 80%;
+	    margin: auto;
+	    height: max-content;
+	    top: 0;
+	    bottom: 0;
+	}
+	
+	.dropdown-content {
+	    left: 0;
+	    right: 0;
+	    width: max-content;
+    	margin: auto;
+	}
+	
+	.dropdown {
+		padding: 12px 6px 6px 6px;
+	}
+	
+	.div-idioma {
+		text-align: center;
+	}
+	
+	.login-body .login-panel .logo-container img {
+		width: 200px;
+		margin-bottom: 10px;
+	}
+	
+	.login-body .login-panel .login-panel-content {
+	    margin-top: 20px;
+	}
+	
+}

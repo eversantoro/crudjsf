@@ -1,0 +1,238 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/template/template.xhtml">
+
+	<ui:define name="content">
+	
+		<h:form id="form">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+                        <h1>
+                        	<i class="fa fa-user" /> 
+                        	<span>#{msgs['pessoa']}</span>
+                        </h1>
+
+						<p:outputPanel id="painelGerenciamento">
+							
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-6 ui-fluid">
+									<p:outputLabel value="#{msgs['nome']}" for="inputNome" />
+									<p:inputText id="inputNome" value="#{pessoaMB.pessoa.nome}" autocomplete="off" maxlength="150" />
+								</div>
+
+								<div class="ui-g-12 ui-md-3 ui-fluid">
+									<p:outputLabel value="#{msgs['dataNascimento']}" for="inputIdade" />
+										<p:calendar id="inputIdade" value="#{pessoaMB.pessoa.idade}" styleClass="widthFull"
+												pattern="dd/MM/yyyy" mask="true" showOn="button" navigator="true" locale="pt" />
+								</div>
+								
+								<div class="ui-g-12 ui-md-3 ui-fluid">
+									<p:outputLabel value="#{msgs['sexo']}" for="comboSexo" />
+											<p:selectOneMenu id="comboSexo" label="Sexo" value="#{pessoaMB.pessoa.sexo}" styleClass="widthFull-select">
+												<f:selectItem itemLabel="#{msgs['selecionar']}" />
+												<f:selectItems value="#{pessoaMB.comboSexo}" />
+											</p:selectOneMenu>
+								</div>
+
+							</div>
+							
+							<div class="ui-g button-group button-responsive">
+								<p:defaultCommand target="btnDefault" />
+								<p:commandButton id="btnDefault" global="false" style="display: none;" />
+								
+								<div class="ui-g-6">
+									<p:commandButton id="botaoCancelar" value="#{msgs['cancelar']}" actionListener="#{pessoaMB.cancelar}" 
+										icon="fa fa-eraser" partialSubmit="true" update=":growl painelGerenciamento painelTabela :form:tabelaDeEnderecos" styleClass="secondary-button"
+										process="botaoCancelar" />
+		
+									<p:commandButton id="botaoExcluir" value="#{msgs['excluir']}" actionListener="#{pessoaMB.excluir}" 
+										icon="fa fa-trash" partialSubmit="true" styleClass="danger-btn" process="botaoExcluir"
+										update=":growl painelGerenciamento painelTabela tabelaDeEnderecos" disabled="#{pessoaMB.pessoa.id == null}">
+										<p:confirm header="#{msgs['confirmar']}" message="#{msgs['desejaExcluir']}" icon="fa fa-warning" />
+									</p:commandButton>
+								</div>
+							
+								<div class="ui-g-6 group-right">
+									<p:commandButton id="botaoPesquisar" value="#{msgs['pesquisar']}" actionListener="#{pessoaMB.pesquisar}" 
+										icon="fa fa-search" partialSubmit="true" disabled="#{pessoaMB.pessoa.id != null}"
+										process="botaoPesquisar inputNome"
+										update=":growl painelGerenciamento painelTabela" styleClass="secondary-button" />
+		
+									<p:commandButton id="botaoAlterar" value="#{msgs['alterar']}" actionListener="#{pessoaMB.alterar}" 
+										icon="fa fa-edit" partialSubmit="true" disabled="#{pessoaMB.pessoa.id == null}" 
+										process="botaoAlterar inputIdade inputNome comboSexo"
+										update=":growl painelGerenciamento painelTabela">
+										<f:param name="validateBean" value="true" />
+									</p:commandButton>
+		
+									<p:commandButton id="botaoSalvar" value="#{msgs['salvar']}" actionListener="#{pessoaMB.salvar}" 
+										icon="fa fa-save" partialSubmit="true" disabled="#{pessoaMB.pessoa.id != null}" 
+										process="botaoSalvar inputIdade inputNome comboSexo"
+										update=":growl painelGerenciamento painelTabela">
+										<f:param name="validateBean" value="true" />
+									</p:commandButton>		
+									
+									<p:commandButton id="botaoEndereco" value="#{msgs['endereco']}" oncomplete="PF('enderecoDialog').show();" actionListener="#{pessoaMB.abrirDialogEndereco}"
+										icon="fa fa-save" partialSubmit="true"  disabled="#{pessoaMB.pessoa.id == null}"
+										update=":growl :enderecoForm">
+									</p:commandButton>										
+										
+								</div>
+							</div>
+
+						</p:outputPanel>
+
+					</div>
+				</div>
+			</div>
+			
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<div class="card card-w-title">
+                        <h1>
+                        	<i class="fa fa-list" /> 
+                        	<span>Lista Pessoas</span>
+                        </h1>
+
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:outputPanel id="painelTabela">
+									<p:dataTable id="tabela" var="item" value="#{pessoaMB.listaPessoa}" rowKey="#{item.id}" 
+									selectionMode="single" selection="#{pessoaMB.pessoa}"
+									rows="10" paginator="true" rowsPerPageTemplate="10,50,100,#{fn:length(pessoaMB.listaPessoa) > 100 ? fn:length(pessoaMB.listaPessoa) : ''}" 
+									paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+									emptyMessage="#{msgs['nenhumaPessoaCadastrada']}" styleClass="mobileTable"
+									paginatorPosition="bottom" currentPageReportTemplate="#{msgs['paginacao']}">
+									
+										<p:column headerText="#{msgs['nome']}" sortBy="#{item.nome}">
+											<h:outputText value="#{item.nome}" />
+										</p:column>
+			
+										<p:column headerText="#{msgs['dataNascimento']}" sortBy="#{item.idade}">
+											<h:outputText value="#{item.idade}">
+												<f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR" />
+											</h:outputText>
+										</p:column>
+
+			
+										<p:column headerText="#{msgs['sexo']}" sortBy="#{item.sexo}">
+											<h:outputText value="#{item.sexo eq 'M' ? msgs.masculino : msgs.feminino}" />
+										</p:column>
+										
+										<p:ajax event="rowSelect" listener="#{pessoaMB.clonarObjetoSelecionado}" 
+											update=":form:painelGerenciamento :form:tabelaDeEnderecos" />
+									</p:dataTable>
+								</p:outputPanel>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+			
+			<!-- Tabela de Endereços -->
+			<p:outputPanel id="tabelaDeEnderecos">
+				<p:panel header="#{msgs['endereco']}" style="margin: 5px;" rendered="#{not empty pessoaMB.pessoa.listaEndereco}">
+					<p:dataTable id="enderecosTable" var="endereco" rowKey="#{endereco.id}"
+						selectionMode="single" selection="#{pessoaMB.endereco}"
+						value="#{pessoaMB.pessoa.listaEndereco}" emptyMessage="#{msgs['nenhumEnderecoCadastrado']}">
+						<p:column headerText="#{msgs['cep']}">
+							<h:outputText value="#{endereco.cep}" />
+						</p:column>
+						<p:column headerText="#{msgs['estado']}">
+							<h:outputText value="#{endereco.estado}" />
+						</p:column>
+						<p:column headerText="#{msgs['cidade']}">
+							<h:outputText value="#{endereco.cidade}" />
+						</p:column>
+						<p:column headerText="#{msgs['logradouro']}">
+							<h:outputText value="#{endereco.logradouro}" />
+						</p:column>
+						<p:column headerText="#{msgs['numero']}">
+							<h:outputText value="#{endereco.numero}" />
+						</p:column>
+							<p:ajax event="rowSelect" listener="#{pessoaMB.clonarObjetoSelecionadoEndereco}" 
+								update=":form:painelGerenciamento :form:tabelaDeEnderecos enderecoDialog" oncomplete="PF('enderecoDialog').show();"/>
+						
+					</p:dataTable>
+				</p:panel>
+			</p:outputPanel>
+		</h:form>
+		
+		
+		<p:dialog id="enderecoDialog" header="#{msgs['endereco']}" widgetVar="enderecoDialog" modal="true" dynamic="true" appendToBody="true">
+		<!-- Formulário de Endereço -->
+		<h:form id="enderecoForm">
+			<p:panel header="#{msgs['endereco']}">
+				<h:inputHidden id="id" value="#{pessoaMB.endereco.id}" />
+				<h:panelGrid columns="3" style="width: 100%;">
+					<p:outputLabel for="cep" value="#{msgs['cep']}:" />
+					<p:inputText id="cep"
+						value="#{pessoaMB.endereco.cep}" required="true" maxlength="8"/>
+					<h:message for="cep" />
+
+					<p:outputLabel for="estado" value="#{msgs['estado']}:" />
+					<p:selectOneMenu id="estado" value="#{pessoaMB.endereco.estado}"
+						required="true">
+						<f:selectItem itemLabel="#{msgs['selecioneEstado']}" itemValue="" />
+						<f:selectItems value="#{pessoaMB.comboEstado}" />
+					</p:selectOneMenu>
+					<h:message for="estado" />
+
+					<p:outputLabel for="cidade" value="#{msgs['cidade']}:" />
+					<p:inputText id="cidade"
+						value="#{pessoaMB.endereco.cidade}" required="true" maxlength="100" />
+					<h:message for="cidade" />
+
+					<p:outputLabel for="logradouro" value="#{msgs['logradouro']}:" />
+					<p:inputText id="logradouro"
+						value="#{pessoaMB.endereco.logradouro}" required="true" maxlength="100" />
+					<h:message for="logradouro" />
+
+					<p:outputLabel for="numero" value="#{msgs['numero']}:" />
+					<p:inputText id="numero" value="#{pessoaMB.endereco.numero}" maxlength="8"
+						required="true" />
+					<h:message for="numero" />
+
+				</h:panelGrid>
+
+					
+
+									<p:commandButton id="botaoSalvar" value="#{msgs['salvar']}" actionListener="#{pessoaMB.salvarEndereco}" 
+										icon="fa fa-save" partialSubmit="true" disabled="#{pessoaMB.endereco.id != null}" 
+										process=":enderecoForm"
+										oncomplete="PF('enderecoDialog').hide()"
+										update=":growl :form:tabelaDeEnderecos">
+										<f:param name="validateBean" value="true" />
+									</p:commandButton>		
+
+
+									<p:commandButton id="botaoAlterar" value="#{msgs['alterar']}" actionListener="#{pessoaMB.alterarEndereco}" 
+										icon="fa fa-edit" partialSubmit="true" disabled="#{pessoaMB.endereco.id == null}" 
+										process=":enderecoForm"
+										oncomplete="PF('enderecoDialog').hide()"
+										update=":growl :form:tabelaDeEnderecos">
+										<f:param name="validateBean" value="true" />
+									</p:commandButton>
+		
+									
+									<p:commandButton id="botaoExcluir" value="#{msgs['excluir']}" actionListener="#{pessoaMB.excluirEndereco}" 
+										icon="fa fa-trash" partialSubmit="true" styleClass="danger-btn" process="botaoExcluir"
+										oncomplete="PF('enderecoDialog').hide()"
+										update=":growl :form:tabelaDeEnderecos" 
+										disabled="#{pessoaMB.endereco.id == null}">
+										<p:confirm header="#{msgs['confirmar']}" message="#{msgs['desejaExcluir']}" icon="fa fa-warning" />
+									</p:commandButton>
+										
+					
+					
+			</p:panel>
+		</h:form>
+	</p:dialog>
+		
+		
+	</ui:define>
+
+</ui:composition>
